@@ -1,5 +1,5 @@
 <?php
-$cachedir = '/tmp/less-compiler/';
+$cachedir = '/tmp/css-preprocessor-cache/';
 $prefix = 'less-';
 $suffix = '.css';
 
@@ -17,6 +17,10 @@ function compile_less() {
 	$compiled = substr($compiled,0,-1);
 	if (0 !== $exit_code) { throw new Exception($compiled); }
 	return $compiled;
+}
+
+function compile_sass() {
+
 }
 
 if (isset($_GET['recache'])) {
