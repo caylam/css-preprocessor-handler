@@ -11,22 +11,42 @@ if(!is_dir($cachedir)) {
 
 if(preg_match("/.less$/", $_SERVER['PATH_TRANSLATED'])) {
 
-    $cssCompilerCommand = "/usr/bin/env lessc ". $_SERVER['PATH_TRANSLATED'] . " 2>&1; echo $?";
     $cachePrefix = 'less-';
+
+    $cssCompilerCommand = "/usr/bin/env lessc ";
+
+    if(isset($_GET['debug'])){
+        $cssCompilerCommand .= "--verbose ";
+    }
+
+    $cssCompilerCommand .= $_SERVER['PATH_TRANSLATED'] . " 2>&1; echo $?";
 
 }
 else if(preg_match("/.sass$/", $_SERVER['PATH_TRANSLATED'])
     || preg_match("/.scss$/", $_SERVER['PATH_TRANSLATED'])) {
 
-    $cssCompilerCommand = "/usr/bin/env sass ". $_SERVER['PATH_TRANSLATED'] . " 2>&1; echo $?";
     $cachePrefix = 'sass-';
+
+    $cssCompilerCommand = "/usr/bin/env sass ";
+
+    if(isset($_GET['debug'])){
+        $cssCompilerCommand .= "--trace --debug-info --line-numbers ";
+    }
+
+    $cssCompilerCommand .= $_SERVER['PATH_TRANSLATED'] . " 2>&1; echo $?";
 
 }
 else if(preg_match("/.styl$/", $_SERVER['PATH_TRANSLATED'])) {
 
-    $cssCompilerCommand = "/usr/bin/env stylus ". $_SERVER['PATH_TRANSLATED'] . " 2>&1; echo $?";
     $cachePrefix = 'stylus-';
 
+    $cssCompilerCommand = "/usr/bin/env stylus < ".$_SERVER['PATH_TRANSLATED'];
+
+    if(isset($_GET['debug'])){
+        $cssCompilerCommand .= " --firebug --line-numbers";
+    }
+
+    $cssCompilerCommand .= " 2>&1; echo $?";
 }
 
 $hash = substr(exec("/usr/bin/env sha1sum ". $_SERVER['PATH_TRANSLATED']), 0, 40);
@@ -51,7 +71,8 @@ try {
 		header('Content-type: text/css;');
 		passthru("cat ". $_SERVER['PATH_TRANSLATED']);
 		exit(0);
-	} elseif (isset($_GET['nocache'])) {
+	} elseif (isset($_GET['nocache'])
+        || isset($_GET['debug'])) {
 		header('Content-type: text/css;');
 		$compiled = compile_css($cssCompilerCommand);
 		echo $compiled;
