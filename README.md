@@ -10,7 +10,7 @@ The compiled files are cached in the temporary directory and then passed through
 
 
 ### Error Handling
-When an error occurs while compiling the server will return a 500 status code and the STDERR output from the lessc command as text/plain.
+When an error occurs while compiling the server will return a 500 status code and the STDERR output from the compiler as text/plain.
 
 
 ### Options
@@ -50,7 +50,7 @@ Execute the following with root permissions i.e. sudo.
     rpm --import http://nodejs.tchol.org/RPM-GPG-KEY-tchol
     yum localinstall --nogpgcheck http://nodejs.tchol.org/repocfg/fedora/nodejs-stable-release.noarch.rpm
     yum install nodejs npm
-
+    ln -svf /usr/bin/nodejs /usr/bin/node
 
 ####Debian / Mint / Ubuntu
 
@@ -74,8 +74,7 @@ Execute the following with root permissions i.e. sudo.
 ####Fedora / CentOS / RHEL
     npm install -g less
     ln -svf /usr/lib/node_modules/less/bin/lessc /usr/bin/lessc
-    ln -svf /usr/bin/nodejs /usr/bin/node
-
+    
     cp ./less.conf /etc/httpd/conf.d/less.conf
     cp -r ./less-compiler /etc/httpd/conf.d/
 
